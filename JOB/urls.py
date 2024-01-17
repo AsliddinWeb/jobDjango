@@ -7,6 +7,10 @@ from django.conf.urls.static import static
 
 from .views import home_page, cabinet_page
 
+admin.site.site_title = "JobUZ"
+admin.site.site_header = "JobUZ"
+admin.site.index_title = "Salom Admin!"
+
 urlpatterns = [
     path('admin/', admin.site.urls),
 

@@ -8,6 +8,9 @@ class JobCategory(models.Model):
     def __str__(self):
         return self.title
 
+    class Meta:
+        verbose_name_plural = 'Ish kategoriyalari'
+
 class JobRegion(models.Model):
     name = models.CharField(max_length=255)
     icon = models.ImageField(upload_to='job-region')
@@ -15,12 +18,8 @@ class JobRegion(models.Model):
     def __str__(self):
         return self.name
 
-# class JobFile(models.Model):
-#     title = models.CharField(max_length=255)
-#     file = models.FileField(upload_to='job-file')
-#
-#     def __str__(self):
-#         return self.title
+    class Meta:
+        verbose_name_plural = 'Viloyatlar'
 
 STATUS_CHOICES = (
     ('Kutishda', 'Kutishda'),
@@ -54,3 +53,4 @@ class Job(models.Model):
 
     class Meta:
         ordering = ['-id']
+        verbose_name_plural = 'Ishlar'
