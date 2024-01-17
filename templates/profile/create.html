@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block wrapper_class %}page-wrapper dashboard mm-page mm-slideout{% endblock %}
+
+{% block content %}
+<div class="sidebar-backdrop"></div>
+<!-- User Sidebar -->
+<div class="user-sidebar">
+
+    <div class="sidebar-inner">
+        <ul class="navigation">
+            <li><a href="{% url 'home_page' %}"> <i class="la la-home"></i> Bosh sahifa</a></li>
+            <li><a href="/cabinet/"><i class="la la-user-tie"></i>Shaxsiy kabinet</a></li>
+            <li><a href="/accounts/logout/"><i class="la la-sign-out"></i>Chiqish</a></li>
+        </ul>
+    </div>
+</div>
+
+<section class="user-dashboard">
+    <div class="dashboard-outer">
+
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                  <div class="ls-widget">
+                      <div class="tabs-box">
+                          <div class="widget-content">
+                              <form method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                {{ form.as_p }}
+
+                                  {% if value == 'add' %}
+                                    <button type="submit" class="btn btn-success">Profil yaratish</button>
+                                  {% else %}
+                                    <button type="submit" class="btn btn-warning">O'zgartirish</button>
+                                  {% endif %}
+                              </form>
+                          </div>
+                      </div>
+                  </div>
+            </div>
+
+
+        </div>
+    </div>
+</section>
+{% endblock %}

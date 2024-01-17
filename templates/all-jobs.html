@@ -1,0 +1,361 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="utf-8">
+    <title>Barcha e'lonlar - {{ SITE_SETTINGS.title }}</title>
+
+    <!-- Stylesheets -->
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/responsive.css' %}" rel="stylesheet">
+
+    <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" type="image/x-icon">
+    <link rel="icon" href="{% static 'images/favicon.png' %}" type="image/x-icon">
+
+    <!-- Responsive -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script><![endif]-->
+    <!--[if lt IE 9]>
+    <script src="{% static 'js/respond.js' %}"></script><![endif]-->
+</head>
+
+<body class="mm-wrapper" style="">
+
+<div class="page-wrapper mm-page mm-slideout" id="mm-0">
+
+    <!-- Preloader -->
+    <div class="preloader" style="display: none;"></div>
+
+    <!-- Header Span -->
+    <span class="header-span"></span>
+
+    <!-- Main Header-->
+    <header class="main-header header-style-three -type-15">
+        <div class="container-fluid">
+            <!-- Main box -->
+            <div class="main-box">
+                <!--Nav Outer -->
+                <div class="nav-outer">
+                    <div class="logo-box">
+                        <div class="logo">
+                            <a href="{% url 'home_page' %}">
+                                <img src="{{ SITE_SETTINGS.header_logo.url }}" width="50"
+                                     alt="{{ SITE_SETTINGS.title }}" title="{{ SITE_SETTINGS.title }}">
+                            </a>
+                        </div>
+                    </div>
+
+                    <nav class="nav main-menu">
+                        <ul class="navigation" id="navbar">
+                            {% for one_navbar in ONE_NAVBAR %}
+                            {% if one_navbar.is_submenu %}
+                            <li class="dropdown">
+                                <span class="fw-600">{{ one_navbar.title }}</span>
+                                <ul>
+                                    {% for two_navbar in TWO_NAVBAR %}
+                                    {% if two_navbar.one_navbar.id == one_navbar.id %}
+                                    <li>
+                                        <a href="{{ two_navbar.link }}">{{ two_navbar.title }}</a>
+                                    </li>
+                                    {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                            {% else %}
+                            <li>
+                                <a class="fw-600" href="{{ one_navbar.link }}">{{ one_navbar.title }}</a>
+                            </li>
+                            {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </nav>
+                </div>
+
+                <div class="outer-box">
+                    <!-- Login/Register -->
+                    <div class="btn-box">
+                        {% if request.user.is_authenticated %}
+                        <a href="{% url 'add_job_page' %}" class="theme-btn btn-style-seven">Loyiha joylash</a>
+                        <a href="/cabinet/" class="theme-btn btn-outline-green"><span
+                                class="icon icon-contact"></span><b class="mx-2"> @{{ request.user.username }}</b></a>
+                        {% else %}
+                        <a href="/accounts/login/" class="theme-btn btn-style-seven">Kirish</a>
+                        <a href="/accounts/signup/" class="theme-btn btn-outline-green">Ro'yhatdan o'tish</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Header -->
+        <div class="mobile-header">
+            <div class="logo">
+                <a href="{% url 'home_page' %}">
+                    <img src="{{ SITE_SETTINGS.header_logo.url }}" width="50" alt="{{ SITE_SETTINGS.title }}"
+                         title="{{ SITE_SETTINGS.title }}">
+                </a>
+            </div>
+
+            <!--Nav Box-->
+            <div class="nav-outer clearfix">
+
+                <div class="outer-box">
+                    <!-- Login/Register -->
+                    <div class="login-box">
+                        {% if request.user.is_authenticated %}
+                        <a href="/cabinet/"><span class="icon-user"></span></a>
+                        {% else %}
+                        <a href="/accounts/login/"><span class="icon-user"></span></a>
+                        {% endif %}
+                    </div>
+
+                    <a href="#nav-mobile" class="mobile-nav-toggler navbar-trigger"><span
+                            class="flaticon-menu-1"></span></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Nav -->
+        <div id="nav-mobile"></div>
+    </header>
+    <!--End Main Header -->
+
+    <!--Page Title-->
+    <section class="page-title">
+        <div class="auto-container">
+            <div class="title-outer">
+                <h1>Barcha ish e'lonlari</h1>
+                <ul class="page-breadcrumb">
+                    <li><a href="{% url 'home_page' %}">Bosh sahifa</a></li>
+                    <li>Barcha ish e'lonlari</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    <!--End Page Title-->
+
+    <!-- Listing Section -->
+    <section class="ls-section">
+        <div class="auto-container">
+            <div class="filters-backdrop"></div>
+
+            <div class="row">
+
+                <!-- Content Column -->
+                <div class="content-column col-lg-12">
+                    <div class="ls-outer">
+                        <!-- ls Switcher -->
+                        <div class="ls-switcher">
+                            <div class="showing-result show-filters">
+                                <div class="text">Hozirda mavjud <strong>{{ JOBS|length }}ta.</strong> Jami: <strong>{{ ALL_JOBS|length }}ta</strong> ish eloni!</div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            {% for job in JOBS %}
+                                <div class="job-block col-lg-6 col-md-12 col-sm-12">
+                                    <div class="inner-box">
+                                        <div class="content">
+                                            <span class="company-logo">
+                                                {% if job.icon %}
+                                                    <img src="{{ job.icon.url }}" alt="AsliddinWeb | Vohid Code">
+                                                {% else %}
+                                                    <i class="fa fa-box-open display-6"></i>
+                                                {% endif %}
+                                            </span>
+                                            <h4><a href="{% url 'job_detail' pk=job.id %}">{{ job.title }}</a></h4>
+                                            <ul class="job-info">
+                                                <li><span class="icon flaticon-briefcase"></span> {{ job.category }}</li>
+                                                <li><span class="icon flaticon-map-locator"></span> {{ job.region }}</li>
+                                                {% if job.is_none_price %}
+                                                    <li><span class="icon flaticon-money"></span> Kelishiladi</li>
+                                                {% else %}
+                                                    <li><span class="icon flaticon-money"></span> {{ job.price }} so'm</li>
+                                                {% endif %}
+                                                <li><span class="icon flaticon-clock-3"></span> {{ job.created_at }}</li>
+                                            </ul>
+                                            <ul class="job-other-info">
+                                                {% if job.is_none_deadline %}
+                                                    <li class="time"><b>Muddat:</b> Kelishiladi</li>
+                                                {% else %}
+                                                    <li class="time"><b>Muddat:</b> {{ job.deadline }} gacha</li>
+                                                {% endif %}
+                                            </ul>
+                                            <button class="bookmark-btn"><span class="flaticon-bookmark"></span></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Pagination -->
+                        <nav class="ls-pagination mb-5">
+                            <ul class="pagination">
+                                {% if JOBS.has_previous %}
+                                    <li class="prev">
+                                        <a href="{{ JOBS.previous_page_number }}" aria-label="Previous">
+                                            <i class="fa fa-arrow-left"></i>
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="prev disabled">
+                                    <a>
+                                        <i class="fa fa-arrow-left"></i>
+                                    </a>
+                                </li>
+                                {% endif %}
+
+                                {% for page_num in JOBS.paginator.page_range %}
+                                    <li>
+                                        <a class="current-page" href="?page={{ page_num }}">{{ page_num }}</a>
+                                    </li>
+                                {% endfor %}
+
+                                {% if JOBS.has_next %}
+                                    <li class="next">
+                                        <a href="?page={{ JOBS.next_page_number }}">
+                                            <i class="fa fa-arrow-right"></i>
+                                        </a>
+                                    </li>
+
+                                    <li><a href="?page={{ JOBS.next_page_number }}" aria-label="Next"><i class="feather-chevron-right"></i></a></li>
+                                {% else %}
+                                    <li class="next disabled">
+                                        <a>
+                                            <i class="fa fa-arrow-right"></i>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+
+                        <!-- Call To Action -->
+                        <div class="call-to-action-four style-two">
+                            <h5>Ish izlayabsizmi?</h5>
+                            <p>Resumeyingizni to'ldiring va o'zingizga mos ish qidirib toping!</p>
+                            <a href="{% url 'cabinet_page' %}" class="theme-btn btn-style-one bg-blue"><span class="btn-title">Resume yuklash</span></a>
+                            <div class="image" style="background-image: url({% static 'images/resource/ads-bg-4.png' %});"></div>
+                        </div>
+                        <!-- End Call To Action -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--End Listing Page Section -->
+
+
+    <!-- Main Footer -->
+    <footer class="main-footer style-six -type-2">
+        <div class="auto-container">
+            <!--Widgets Section-->
+            <div class="widgets-section">
+                <div class="row">
+                    <div class="col-lg-7 col-md-12 col-sm-12">
+                        <div class="row">
+                            <div class="footer-column col-lg-6 col-md-6 col-sm-12">
+                                <div class="footer-widget links-widget">
+                                    <h4 class="widget-title">Foydali Sahifalar</h4>
+                                    <div class="widget-content">
+                                        <ul class="list">
+                                            {% for i in FOOTER_LINKS_1 %}
+                                            <li><a href="{{ i.link }}">{{ i.title }}</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="footer-column col-lg-6 col-md-6 col-sm-12">
+                                <div class="footer-widget links-widget">
+                                    <h4 class="widget-title">Interaktiv Hizmatlar</h4>
+                                    <div class="widget-content">
+                                        <ul class="list">
+                                            {% for i in FOOTER_LINKS_2 %}
+                                            <li><a href="{{ i.link }}">{{ i.title }}</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <div class="col-xl-3 col-lg-4 offset-lg-1 col-md-12">
+                        <div class="footer-column about-widget">
+                            <div class="logo">
+                                <a href="{% url 'home_page' %}">
+                                    <img src="{{ SITE_SETTINGS.footer_logo.url }}" width="60"
+                                         alt="{{ SITE_SETTINGS.title }}">
+                                </a>
+                            </div>
+
+                            <div class="footer-text">
+                                <p>{{ FOOTER_SETTINGS.note }}</p>
+                            </div>
+
+                            <div class="footer-item">
+                                <div class="title">Telefon raqam</div>
+                                <a href="tel:{{ FOOTER_SETTINGS.phone_number }}" class="subtitle">{{ FOOTER_SETTINGS.phone_number }}</a>
+                            </div>
+
+                            <div class="footer-item">
+                                <div class="title">Email</div>
+                                <a href="mailto:{{ FOOTER_SETTINGS.email }}" class="subtitle">{{ FOOTER_SETTINGS.email }}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!--Bottom-->
+        <div class="footer-bottom">
+            <div class="auto-container">
+                <div class="outer-box">
+                    <div class="copyright-text">
+                        {{ FOOTER_SETTINGS.copyright|safe }}
+                    </div>
+                    <div class="social-links">
+                        {% for i in SOCIAL_SETTINGS %}
+                        <a href="{{ i.link }}"><i class="{{ i.icon }}"></i></a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-to-top scroll-to-target" data-target="html"><span class="fa fa-angle-up"></span></div>
+    </footer>
+    <!-- End Main Footer -->
+
+
+</div><!-- End Page Wrapper -->
+
+
+<script src="{% static 'js/jquery.js' %}"></script>
+<script src="{% static 'js/popper.min.js' %}"></script>
+<script src="{% static 'js/chosen.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/jquery.fancybox.js' %}"></script>
+<script src="{% static 'js/jquery.modal.min.js' %}"></script>
+<script src="{% static 'js/mmenu.polyfills.js' %}"></script>
+<script src="{% static 'js/mmenu.js' %}"></script>
+<script src="{% static 'js/appear.js' %}"></script>
+<script src="{% static 'js/anm.min.js' %}"></script>
+<script src="{% static 'js/ScrollMagic.min.js' %}"></script>
+<script src="{% static 'js/rellax.min.js' %}"></script>
+<script src="{% static 'js/owl.js' %}"></script>
+<script src="{% static 'js/wow.js' %}"></script>
+<script src="{% static 'js/script.js' %}"></script>
+
+
+<div class="mm-wrapper__blocker mm-slideout"><a href="#mm-0"><span class="mm-sronly">Close menu</span></a></div>
+</body>
+</html>

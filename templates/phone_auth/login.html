@@ -1,0 +1,49 @@
+{% extends "phone_auth/base.html" %}
+
+{% block title_block %}
+    Tizimga kirish
+{% endblock title_block %}
+    
+{% block body_block %}
+    <!--suppress HtmlUnknownAttribute -->
+<div class="phoneauthform">
+    <h3 class="phoneauthform-title">Tizimga kirish</h3>
+    <form class="phoneauthform-content" method="POST">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+
+        <div class="fieldWrapper">
+            {{ form.login.errors }}
+            <label for="id_login">
+                Telefon raqam, Email yoki Username:
+            </label>
+            <input type="text"
+                   id="id_login"
+                   name="{{ form.login.html_name }}"
+                   {% if form.login.value %}
+                        value="{{ form.login.value }}"
+                   {% endif %}
+                   {% if form.login.field.required %}required{% endif %}>
+        </div>
+
+        <div class="fieldWrapper">
+            {{ form.password.errors }}
+            <label for="id_password">
+                Parol:
+            </label>
+            <input type="password"
+                   id="id_password"
+                   name="{{ form.password.html_name }}"
+                   {% if form.password.field.required %}required{% endif %}>
+        </div>
+
+        <button type="submit">Kirish</button>
+    </form>
+    <div class="dpa-help-text">
+        <p>
+            Akkountingiz yo'qmi? <a href="{% url 'phone_auth:phone_signup' %}">Ro'yhatdan o'tish</a>
+        </p> 
+        <a href="{% url 'phone_auth:phone_password_reset' %}">Parolni tiklaysizmi?</a>
+    </div>
+</div>
+{% endblock body_block %}

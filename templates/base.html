@@ -1,0 +1,156 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="{{ SEO_SETTINGS.description }}">
+  <meta name="keywords" content="{{ SEO_SETTINGS.keywords }}">
+  <meta name="author" content="{{ SEO_SETTINGS.author }}">
+
+  <title>{{ SITE_SETTINGS.title }}</title>
+
+  <!-- Stylesheets -->
+  <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+  <link href="{% static 'css/style.css' %}" rel="stylesheet">
+  <link href="{% static 'css/responsive.css' %}" rel="stylesheet">
+
+  {% block css_links %}{% endblock %}
+
+  <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" type="image/x-icon">
+  <link rel="icon" href="{% static 'images/favicon.png' %}" type="image/x-icon">
+
+  <!-- Responsive -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script><![endif]-->
+  <!--[if lt IE 9]><script src="{% static 'js/respond.js' %}"></script><![endif]-->
+</head>
+
+<body data-anm=".anm">
+
+  <div class="{% block wrapper_class %}{% endblock %}">
+
+    <!-- Preloader -->
+    <div class="preloader"></div>
+
+    <!-- Header Span -->
+    <span class="header-span"></span>
+
+    <!-- Main Header-->
+    <header class="main-header header-style-three -type-15">
+      <div class="container-fluid">
+        <!-- Main box -->
+        <div class="main-box">
+          <!--Nav Outer -->
+          <div class="nav-outer">
+            <div class="logo-box">
+              <div class="logo">
+                <a href="{% url 'home_page' %}">
+                  <img src="{{ SITE_SETTINGS.header_logo.url }}" width="50" alt="{{ SITE_SETTINGS.title }}" title="{{ SITE_SETTINGS.title }}">
+                </a>
+              </div>
+            </div>
+
+            <nav class="nav main-menu">
+              <ul class="navigation" id="navbar">
+                {% for one_navbar in ONE_NAVBAR %}
+                  {% if one_navbar.is_submenu %}
+                    <li class="dropdown">
+                      <span class="fw-600">{{ one_navbar.title }}</span>
+                      <ul>
+                        {% for two_navbar in TWO_NAVBAR %}
+                          {% if two_navbar.one_navbar.id == one_navbar.id %}
+                            <li>
+                              <a href="{{ two_navbar.link }}">{{ two_navbar.title }}</a>
+                            </li>
+                          {% endif %}
+                        {% endfor %}
+                      </ul>
+                    </li>
+                  {% else %}
+                    <li>
+                        <a class="fw-600" href="{{ one_navbar.link }}">{{ one_navbar.title }}</a>
+                    </li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+            </nav>
+          </div>
+
+          <div class="outer-box">
+            <!-- Login/Register -->
+            <div class="btn-box">
+              {% if request.user.is_authenticated %}
+                <a href="{% url 'add_job_page' %}" class="theme-btn btn-style-seven">Loyiha joylash</a>
+                <a href="/cabinet/" class="theme-btn btn-outline-green"><span class="icon icon-contact"></span><b class="mx-2"> @{{ request.user.username }}</b></a>
+              {% else %}
+                <a href="/accounts/login/" class="theme-btn btn-style-seven">Kirish</a>
+                <a href="/accounts/signup/" class="theme-btn btn-outline-green">Ro'yhatdan o'tish</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Header -->
+      <div class="mobile-header">
+        <div class="logo">
+          <a href="{% url 'home_page' %}">
+            <img src="{{ SITE_SETTINGS.header_logo.url }}" width="50" alt="{{ SITE_SETTINGS.title }}" title="{{ SITE_SETTINGS.title }}">
+          </a>
+        </div>
+
+        <!--Nav Box-->
+        <div class="nav-outer clearfix">
+
+          <div class="outer-box">
+            <!-- Login/Register -->
+            <div class="login-box">
+              {% if request.user.is_authenticated %}
+                <a href="/cabinet/"><span class="icon-user"></span></a>
+              {% else %}
+                <a href="/accounts/login/"><span class="icon-user"></span></a>
+              {% endif %}
+            </div>
+
+            <a href="#nav-mobile" class="mobile-nav-toggler navbar-trigger"><span class="flaticon-menu-1"></span></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Nav -->
+      <div id="nav-mobile"></div>
+    </header>
+    <!--End Main Header -->
+
+    {% block content %}
+    {% endblock %}
+
+    {% block footer %}
+    {% endblock %}
+
+
+  </div><!-- End Page Wrapper -->
+
+
+  <script src="{% static 'js/jquery.js' %}"></script>
+  <script src="{% static 'js/popper.min.js' %}"></script>
+  <script src="{% static 'js/chosen.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/jquery.fancybox.js' %}"></script>
+  <script src="{% static 'js/jquery.modal.min.js' %}"></script>
+  <script src="{% static 'js/mmenu.polyfills.js' %}"></script>
+  <script src="{% static 'js/mmenu.js' %}"></script>
+  <script src="{% static 'js/appear.js' %}"></script>
+  <script src="{% static 'js/anm.min.js' %}"></script>
+  <script src="{% static 'js/ScrollMagic.min.js' %}"></script>
+  <script src="{% static 'js/rellax.min.js' %}"></script>
+  <script src="{% static 'js/owl.js' %}"></script>
+  <script src="{% static 'js/wow.js' %}"></script>
+  <script src="{% static 'js/script.js' %}"></script>
+
+{% block js_scripts %}{% endblock %}
+
+</body>
+</html>

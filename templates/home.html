@@ -1,0 +1,395 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block wrapper_class %}page-wrapper{% endblock %}
+
+{% block content %}
+
+    <!-- Banner Section-->
+    <section class="banner-section -type-15" style="background-image: url('{{ home_search.image.url }}');">
+      <div class="auto-container">
+        <div class="cotnent-box">
+          <div class="title-box wow fadeInUp" data-wow-delay='300ms'>
+            <h3>{{ home_search.title }}</h3>
+            <div class="text">{{ home_search.body }}</div>
+          </div>
+
+          <!-- Job Search Form -->
+          <div class="job-search-form wow fadeInUp" data-wow-delay='600ms'>
+            <form method="post">
+              {% csrf_token %}
+              <div class="row">
+                <!-- Form Group -->
+                <div class="form-group col-lg-4 col-md-12 col-sm-12">
+                  <span class="icon flaticon-search-1"></span>
+                  <input type="text" name="title" placeholder="Ish nomi yoki kalit so'z kiriting...">
+                </div>
+
+                <!-- Form Group -->
+                <div class="form-group col-lg-3 col-md-12 col-sm-12 location">
+                  <span class="icon flaticon-map-locator"></span>
+                  <input type="text" name="region" placeholder="Shahar nomi(Majburiy emas)">
+                </div>
+
+                <!-- Form Group -->
+                <div class="form-group col-lg-3 col-md-12 col-sm-12 category">
+                  <span class="icon flaticon-briefcase"></span>
+                  <select class="chosen-select" name="category_id">
+                    <option value="0">Kategoriya(Majburiy emas)</option>
+                    {% for i in job_categories %}
+                    <option value="{{ i.id }}">{{ i.title }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+
+                <!-- Form Group -->
+                <div class="form-group col-lg-2 col-md-12 col-sm-12 text-right">
+                  <button type="submit" class="theme-btn btn-style-two">Qidiruv</button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div class="fun-fact-section">
+            <div class="row">
+              {% for i in home_search_counter %}
+                <div class="counter-column col-lg-auto col-md-6 col-sm-6 wow fadeInUp">
+                  <div class="count-box">
+                    <span class="count-text" data-speed="3000" data-stop="{{ i.count }}">0</span></div>
+                  <h4 class="counter-title">{{ i.title }}</h4>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+          <!-- Fun Fact Section -->
+        </div>
+      </div>
+    </section>
+    <!-- End Banner Section-->
+
+    <!-- Work Section -->
+    <section class="layout-pt-120 layout-pb-60">
+      <div class="auto-container">
+        <div class="row grid-base wow fadeInUp">
+          {% for step in home_steps %}
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="work-block -type-3 mb-0">
+                <div class="inner-box">
+                  <div class="icon-wrap -green">
+                    <span class="{{ step.icon }}"></span>
+                  </div>
+                  <h5>{{ step.title|safe }}</h5>
+                  <p>{{ step.body }}</p>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+    <!-- End Work Section -->
+
+    <!-- Job Section -->
+    <section class="layout-pt-60 layout-pb-120">
+      <div class="auto-container">
+        <div class="sec-title text-center mb-0">
+          <h2>O'zingizga mos ishni tanlang</h2>
+          <div class="text">O'z qadringizni biling va hayotingizga mos keladigan ishni toping.</div>
+        </div>
+
+        <div class="default-tabs pt-50 tabs-box">
+          <!--Tabs Box-->
+          <div class="tab-buttons-wrap">
+            <ul class="tab-buttons -pills-condensed">
+              <li class="tab-btn active-btn" data-tab="#tab1">Aniq summali e'lonlar</li>
+              <li class="tab-btn" data-tab="#tab2">Kelishiladi turkumi</li>
+            </ul>
+          </div>
+
+          <div class="tabs-content pt-50 wow fadeInUp">
+            <!--Tab-->
+            <div class="tab active-tab" id="tab1">
+              <div class="row">
+                {% for job in aniq_ishlar %}
+                  <div class="job-block col-lg-6 col-md-12 col-sm-12">
+                    <div class="inner-box">
+                      <div class="content">
+                        <span class="company-logo">
+                            {% if job.icon %}
+                                <img src="{{ job.icon.url }}" alt="AsliddinWeb | Vohid Code">
+                            {% else %}
+                                <i class="fa fa-box-open display-6"></i>
+                            {% endif %}
+                        </span>
+                        <h4><a href="{% url 'job_detail' pk=job.id %}">{{ job.title }}</a></h4>
+                        <ul class="job-info">
+                            <li><span class="icon flaticon-briefcase"></span> {{ job.category }}</li>
+                            <li><span class="icon flaticon-map-locator"></span> {{ job.region }}</li>
+                            {% if job.is_none_price %}
+                                <li><span class="icon flaticon-money"></span> Kelishiladi</li>
+                            {% else %}
+                                <li><span class="icon flaticon-money"></span> {{ job.price }} so'm</li>
+                            {% endif %}
+                            <li><span class="icon flaticon-clock-3"></span> {{ job.created_at }}</li>
+                        </ul>
+                        <ul class="job-other-info">
+                            {% if job.is_none_deadline %}
+                                <li class="time">Vaqt kelishiladi</li>
+                            {% else %}
+                                <li class="time">{{ job.deadline }}</li>
+                            {% endif %}
+                        </ul>
+                        <button class="bookmark-btn"><span class="flaticon-bookmark"></span></button>
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+
+            <!--Tab-->
+            <div class="tab" id="tab2">
+              <div class="row">
+                {% for job in noaniq_ishlar %}
+                  <div class="job-block col-lg-6 col-md-12 col-sm-12">
+                    <div class="inner-box">
+                      <div class="content">
+                        <span class="company-logo">
+                            {% if job.icon %}
+                                <img src="{{ job.icon.url }}" alt="AsliddinWeb | Vohid Code">
+                            {% else %}
+                                <i class="fa fa-box-open display-6"></i>
+                            {% endif %}
+                        </span>
+                        <h4><a href="{% url 'job_detail' pk=job.id %}">{{ job.title }}</a></h4>
+                        <ul class="job-info">
+                            <li><span class="icon flaticon-briefcase"></span> {{ job.category }}</li>
+                            <li><span class="icon flaticon-map-locator"></span> {{ job.region }}</li>
+                            {% if job.is_none_price %}
+                                <li><span class="icon flaticon-money"></span> Kelishiladi</li>
+                            {% else %}
+                                <li><span class="icon flaticon-money"></span> {{ job.price }} so'm</li>
+                            {% endif %}
+                            <li><span class="icon flaticon-clock-3"></span> {{ job.created_at }}</li>
+                        </ul>
+                        <ul class="job-other-info">
+                            {% if job.is_none_deadline %}
+                                <li class="time">Vaqt kelishiladi</li>
+                            {% else %}
+                                <li class="time">{{ job.deadline }}</li>
+                            {% endif %}
+                        </ul>
+                        <button class="bookmark-btn"><span class="flaticon-bookmark"></span></button>
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- End Job Section -->
+
+    <!-- Call To Action Two -->
+    <section class="call-to-action-two overlay-black-60" style="background-image: url('{{ home_reklama.image.url }}');">
+      <div class="auto-container wow fadeInUp">
+        <div class="row grid-base justify-content-center">
+          <div class="col-lg-6 col-md-10">
+            <div class="sec-title light text-center">
+              <h2>{{ home_reklama.title }}</h2>
+              <div class="text">{{ home_reklama.body }}</div>
+            </div>
+
+            <div class="btn-box">
+              <a href="{{ home_reklama.button_link }}" class="theme-btn btn-white-type-2">{{ home_reklama.button_title }}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- End Call To Action -->
+
+    <!-- Features Section -->
+    <section class="layout-pt-60 layout-pb-60">
+      <div class="auto-container">
+        <div class="sec-title-outer">
+          <div class="sec-title">
+            <h2>Viloyatlar kesimida ish qidirish</h2>
+            <div class="text">O'z joylashuvingizga qarab ish qidiring</div>
+          </div>
+          <a href="{% url 'all_jobs' %}" class="link text-green">Barchasi <span class="fa fa-angle-right"></span></a>
+        </div>
+
+        <div class="row wow fadeInUp">
+          {% for i in job_regions %}
+           <div class="col-lg-3 col-md-6 col-sm-12">
+            <!-- Feature Block -->
+            <div class="feature-block">
+              <div class="inner-box">
+                <figure class="image"><img src="{{ i.region.icon.url }}" alt=""></figure>
+                <div class="overlay-box">
+                  <div class="content">
+                    <h5>{{ i.region.name }}</h5>
+                    <span class="total-jobs">{{ i.job|length }}ta ish</span>
+                    <a href="{% url 'job_region' pk=i.region.id %}" class="overlay-link"></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+    <!-- End Features Section -->
+
+    <!-- Subscribe Section -->
+    <section class="subscribe-section-two -type-4">
+      <div class="background-image" style="background-image: url({% static 'assets/images/index-15/cta-2/bg.png' %});"></div>
+      <div class="auto-container wow fadeInUp">
+        <div class="row align-items-center justify-content-between">
+          <div class="col-lg-5 col-md-10">
+            <div class="sec-title light mb-0 pb-20">
+              <h2 class="text-white">{{ home_resume.title }}</h2>
+              <div class="text text-white">{{ home_resume.body }}</div>
+
+              <div class="mt-20">
+                <a href="{{ home_resume.button_link }}" class="btn-cv">
+                  <i class="icon fa fa-file-upload"></i>
+                  {{ home_resume.button_title }}
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-5 md:mt-30">
+            <div class="image">
+              <img src="{{ home_resume.image.url }}" alt="image">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- End Subscribe Section -->
+
+    <section class="layout-pt-120 layout-pb-120">
+      <div class="auto-container">
+        <div class="row grid-base justify-content-between align-items-center">
+          <div class="image-column col-lg-6 col-md-12 col-sm-12">
+            <div class="bg-shape"></div>
+            <figure class="image text-center wow fadeInLeft">
+              <img src="{{ home_app.image }}" alt=""></figure>
+          </div>
+          <div class="content-column col-lg-5 col-md-12 col-sm-12">
+            <div class="inner-column pt-0 pb-0 wow fadeInRight">
+              <div class="sec-title">
+                <span class="sub-title text-green">{{ home_app.cap_title }}</span>
+                <h2>{{ home_app.title|safe }}</h2>
+              </div>
+              <div class="content-icons">
+                {% for i in home_app_divs %}
+                  <div class="item">
+                    <div class="icon-wrap">
+                      <span class="{{ i.icon }}"></span>
+                    </div><div class="content">
+                      <h4>{{ i.title }}</h4>
+                      <p>{{ i.body }}</p>
+                    </div>
+                  </div>
+                {% endfor %}
+              <div class="download-btn">
+                <a href="{{ home_app.app_store_link }}"><img src="{% static 'assets/images/icons/apple.png' %}" alt=""></a>
+                <a href="{{ home_app.play_market_link }}"><img src="{% static 'assets/images/icons/google.png' %}" alt=""></a></div>
+              </div></div></div>
+      </div>
+    </section>
+{% endblock %}
+
+{%  block footer %}
+    <!-- Main Footer -->
+    <footer class="main-footer style-six -type-2">
+      <div class="auto-container">
+        <!--Widgets Section-->
+        <div class="widgets-section">
+          <div class="row">
+            <div class="col-lg-7 col-md-12 col-sm-12">
+              <div class="row">
+                <div class="footer-column col-lg-6 col-md-6 col-sm-12">
+                  <div class="footer-widget links-widget">
+                    <h4 class="widget-title">Foydali Sahifalar</h4>
+                    <div class="widget-content">
+                      <ul class="list">
+                        {% for i in FOOTER_LINKS_1 %}
+                          <li><a href="{{ i.link }}">{{ i.title }}</a></li>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="footer-column col-lg-6 col-md-6 col-sm-12">
+                  <div class="footer-widget links-widget">
+                    <h4 class="widget-title">Interaktiv Hizmatlar</h4>
+                    <div class="widget-content">
+                      <ul class="list">
+                        {% for i in FOOTER_LINKS_2 %}
+                          <li><a href="{{ i.link }}">{{ i.title }}</a></li>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+
+            <div class="col-xl-3 col-lg-4 offset-lg-1 col-md-12">
+              <div class="footer-column about-widget">
+                <div class="logo">
+                  <a href="{% url 'home_page' %}">
+                    <img src="{{ SITE_SETTINGS.footer_logo.url }}" width="60" alt="{{ SITE_SETTINGS.title }}">
+                  </a>
+                </div>
+
+                <div class="footer-text">
+                  <p>{{ FOOTER_SETTINGS.note }}</p>
+                </div>
+
+                <div class="footer-item">
+                  <div class="title">Telefon raqam</div>
+                  <a href="tel:{{ FOOTER_SETTINGS.phone_number }}" class="subtitle">{{ FOOTER_SETTINGS.phone_number }}</a>
+                </div>
+
+                <div class="footer-item">
+                  <div class="title">Email</div>
+                  <a href="mailto:{{ FOOTER_SETTINGS.email }}" class="subtitle">{{ FOOTER_SETTINGS.email }}</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!--Bottom-->
+      <div class="footer-bottom">
+        <div class="auto-container">
+          <div class="outer-box">
+            <div class="copyright-text">
+              {{ FOOTER_SETTINGS.copyright|safe }}
+            </div>
+            <div class="social-links">
+              {% for i in SOCIAL_SETTINGS %}
+                <a href="{{ i.link }}"><i class="{{ i.icon }}"></i></a>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scroll-to-top scroll-to-target" data-target="html"><span class="fa fa-angle-up"></span></div>
+    </footer>
+    <!-- End Main Footer -->
+{% endblock %}
